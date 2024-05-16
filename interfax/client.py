@@ -65,14 +65,25 @@ class InterFAX(object):
     def deliver(self):
         return self.outbound.deliver
 
-    def get(self, path, params={}, valid_keys=[], **kwargs):
+    def get(self, path, params=None, valid_keys=None, **kwargs):
         """Make a HTTP GET request."""
+        if params is None:
+            params = {}
+
+        if valid_keys is None:
+            valid_keys = []
 
         url = self._url_for(path, params, valid_keys)
         return self._request('GET', url, **kwargs)
 
-    def post(self, path, params={}, valid_keys=[], **kwargs):
+    def post(self, path, params=None, valid_keys=None, **kwargs):
         """Make a HTTP POST request."""
+        if params is None:
+            params = {}
+
+        if valid_keys is None:
+            valid_keys = []
+
         url = self._url_for(path, params, valid_keys)
         return self._request('POST', url, **kwargs)
 
@@ -89,8 +100,14 @@ class InterFAX(object):
 
         return self._parse_response(request(method, url, **kwargs))
 
-    def _url_for(self, path, params={}, keys=[]):
+    def _url_for(self, path, params=None, keys=None):
         """Validate query params and return fully qualified url."""
+        if params is None:
+            params = {}
+
+        if keys is None:
+            keys = []
+
         invalid = [k for k in params if k not in keys]
 
         message = 'unexpected keyword argument "{0}", expecting: {1}'
